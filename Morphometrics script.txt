@@ -1,0 +1,16 @@
+#This scrip brings commands for drawing PCA plots and violin plots in RStudio. You can use these commands when working with descriptive stats for morphometrics.
+
+> Library (ggplot)
+
+# PCA plot
+> myPr <- prcomp (FILE NAME[, -1], scale = TRUE)
+> biplot (myPr, scale = 0)
+> myPr$x
+> NAME <- cbind (FILE NAME, myPr$x [,1:2])
+> ggplot (NAME , aes(PC1, PC2, col =　 GROUP, fill = GROUP)) +  stat_ellipse(geom = "polygon", col = "black", alpha = 0.5) + geom_point (shape = 21, col = "black")
+
+# Eingen value plot
+> biplot (myPr, scale = 0)
+
+# Violin plots
+>ggplot (NAME , aes(x=GROUP, y=TRAIT, fill= GROUP)) + geom_violin() + theme (axis.text.x=element_blank())
