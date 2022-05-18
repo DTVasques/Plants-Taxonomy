@@ -3,6 +3,7 @@
 Reference: https://www.r-spatial.org/r/2018/10/25/ggplot2-sf-2.html
 
 Prepare your file in a csv format. The file we will be using here is called 'FILE.csv'. The file contains GPS (latitude and longitude) data for samples categorized in three variables: var1, var2 and var3.
+[LDA.pdf](https://github.com/DTVasques/Plants-Taxonomy/files/8712975/LDA.pdf)
 
 # Step 1) Install Packages
 
@@ -50,3 +51,4 @@ class(world)
              shape = 21, fill = "Orange") +
   coord_sf(xlim = c(125, 160), ylim = c(20, 50), expand = FALSE)
 
+[LDA.pdf](https://github.com/DTVasques/Plants-Taxonomy/files/8712976/LDA.pdf)
