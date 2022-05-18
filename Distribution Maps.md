@@ -1,9 +1,18 @@
 # Drawing distribution maps using ggplot 
 
-Reference: https://www.r-spatial.org/r/2018/10/25/ggplot2-sf-2.html
+This tutorial will explain how to draw distribution maps using the ggplot package in R. 
+We will be plotting occurrence data for Oxalis corniculata L. (Oxalidaceae) and Oxalis debilis Kunth. (Oxalidaceae) in Japan, and the data was obtained from GBIF.
 
-Prepare your file in a csv format. The file we will be using here is called 'FILE.csv'. The file contains GPS (latitude and longitude) data for samples categorized in three variables: var1, var2 and var3.
-[LDA.pdf](https://github.com/DTVasques/Plants-Taxonomy/files/8712975/LDA.pdf)
+```js
+Data source: GBIF.org (18 May 2022) GBIF Occurrence Download  https://doi.org/10.15468/dl.upkjss
+
+Code references: 
+Source1: https://www.r-spatial.org/r/2018/10/25/ggplot2-sf-2.html
+Source2: https://www.r-bloggers.com/2021/03/downloading-and-cleaning-gbif-data-with-r/
+
+Documentation:
+https://www.rdocumentation.org/packages/rgbif/versions/3.7.1/topics/occ_data
+```
 
 # Step 1) Install Packages
 
@@ -27,28 +36,53 @@ theme_set(theme_bw())
 library("sf")
 library("rnaturalearth")
 library("rnaturalearthdata")
+library(rgbif)
 ```
 
-# Step 3) Plotting the data
+# Step 3) Download and filter the occurrence data from GBIF
+
+> myspecies <- c("Oxalis corniculata", "Oxalis debilis")
+> gbif_data <- occ_data(scientificName = myspecies, hasCoordinate = TRUE, country = "JP", limit = 2000)  
+
+<img width="536" alt="Screen Shot 2022-05-18 at 12 50 08" src="https://user-images.githubusercontent.com/62867510/168953490-95898b4a-a164-4d5f-8859-cc0003d9d0ed.png">
+
+## Obs1: download GBIF occurrence data for these species; this may take a long time if there are many data points!
+## Obs2: "hasCoordinate" argument allows you to filter only data with GPS (latitude, longitude) information.
+## Obs3: "limit" argument allows you to select how many datapoints you wish to download from the records available.
+
+
+## take a look at the downloaded data:
+> gbif_data
+
+## check how the data are organized:
+> names(gbif_data)
+> names(gbif_data[[myspecies[1]]])
+> names(gbif_data[[myspecies[1]]]$meta)
+> names(gbif_data[[myspecies[1]]]$data)
+
+## create and fill a list with only the 'data' section for each species:
+> myspecies_coords_list <- vector("list", length(myspecies))
+> names(myspecies_coords_list) <- myspecies
+> for (s in myspecies) {
+  coords <- gbif_data[[s]]$data[ , c("decimalLongitude", "decimalLatitude", "individualCount", "occurrenceStatus", "coordinateUncertaintyInMeters", "institutionCode", "references")]
+  myspecies_coords_list[[s]] <- data.frame(species = s, coords)
+}
+> lapply(myspecies_coords_list, head)
+
+# collapse the list into a data frame:
+> myspecies_coords <- as.data.frame(do.call(rbind, myspecies_coords_list), row.names = 1:sum(sapply(myspecies_coords_list, nrow)))
+> head(myspecies_coords)
+> tail(myspecies_coords)
+
+# Step 4) Plotting the data
 > world <- ne_countries(scale = "medium", returnclass = "sf")
-class(world)
+> class(world)
 
 > ggplot(data = world) +
-  geom_sf() +
-  geom_point(data = FILE.csv, aes(x = x, y = y), size = 2, 
-             shape = 21, fill = "Red") +
-  coord_sf(xlim = c(125, 160), ylim = c(20, 50), expand = FALSE) + ggtitle('TITLE') 
-
-# Step 4) Merging map for multiple variables
-
->ggplot(data = world) +
-  geom_sf() +
-  geom_point(data = FILE.csv$var1, aes(x = x, y = y), size = 2, 
-             shape = 21, fill = "Red") +
-  geom_point(data = FILE.csv$var2, aes(x = x, y = y), size = 2, 
-             shape = 21, fill = "Blue") +
-  geom_point(data = FILE.csv$var3, aes(x = x, y = y), size = 2, 
-             shape = 21, fill = "Orange") +
-  coord_sf(xlim = c(125, 160), ylim = c(20, 50), expand = FALSE)
+> geom_sf() +
+> geom_point(data = myspecies_coords, aes(x = decimalLongitude, y = decimalLatitude, fill = factor(species)), size = 2, 
+             shape = 21) +
+> coord_sf(xlim = c(120, 150), ylim = c(20, 50)) + ggtitle('Katabami') 
  
+<img width="492" alt="Screen Shot 2022-05-18 at 12 50 54" src="https://user-images.githubusercontent.com/62867510/168953524-3ed230ab-3b56-457f-be85-8aef0c783b27.png">
 
