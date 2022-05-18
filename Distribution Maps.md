@@ -42,13 +42,14 @@ library(rgbif)
 # Step 3) Download and filter the occurrence data from GBIF
 
 > myspecies <- c("Oxalis corniculata", "Oxalis debilis")
+>
 > gbif_data <- occ_data(scientificName = myspecies, hasCoordinate = TRUE, country = "JP", limit = 2000)  
 
 <img width="536" alt="Screen Shot 2022-05-18 at 12 50 08" src="https://user-images.githubusercontent.com/62867510/168953490-95898b4a-a164-4d5f-8859-cc0003d9d0ed.png">
 
-## Obs1: download GBIF occurrence data for these species; this may take a long time if there are many data points!
-## Obs2: "hasCoordinate" argument allows you to filter only data with GPS (latitude, longitude) information.
-## Obs3: "limit" argument allows you to select how many datapoints you wish to download from the records available.
+Obs1: download GBIF occurrence data for these species; this may take a long time if there are many data points!
+Obs2: "hasCoordinate" argument allows you to filter only data with GPS (latitude, longitude) information.
+Obs3: "limit" argument allows you to select how many datapoints you wish to download from the records available.
 
 
 ## take a look at the downloaded data:
@@ -56,33 +57,42 @@ library(rgbif)
 
 ## check how the data are organized:
 > names(gbif_data)
+>
 > names(gbif_data[[myspecies[1]]])
+> 
 > names(gbif_data[[myspecies[1]]]$meta)
+> 
 > names(gbif_data[[myspecies[1]]]$data)
 
 ## create and fill a list with only the 'data' section for each species:
 > myspecies_coords_list <- vector("list", length(myspecies))
+> 
 > names(myspecies_coords_list) <- myspecies
+> 
 > for (s in myspecies) {
   coords <- gbif_data[[s]]$data[ , c("decimalLongitude", "decimalLatitude", "individualCount", "occurrenceStatus", "coordinateUncertaintyInMeters", "institutionCode", "references")]
   myspecies_coords_list[[s]] <- data.frame(species = s, coords)
 }
+>
 > lapply(myspecies_coords_list, head)
 
 # collapse the list into a data frame:
 > myspecies_coords <- as.data.frame(do.call(rbind, myspecies_coords_list), row.names = 1:sum(sapply(myspecies_coords_list, nrow)))
+> 
 > head(myspecies_coords)
+> 
 > tail(myspecies_coords)
 
 # Step 4) Plotting the data
 > world <- ne_countries(scale = "medium", returnclass = "sf")
+> 
 > class(world)
 
 > ggplot(data = world) +
-> geom_sf() +
-> geom_point(data = myspecies_coords, aes(x = decimalLongitude, y = decimalLatitude, fill = factor(species)), size = 2, 
+  geom_sf() +
+  geom_point(data = myspecies_coords, aes(x = decimalLongitude, y = decimalLatitude, fill = factor(species)), size = 2, 
              shape = 21) +
-> coord_sf(xlim = c(120, 150), ylim = c(20, 50)) + ggtitle('Katabami') 
+  coord_sf(xlim = c(120, 150), ylim = c(20, 50)) + ggtitle('Katabami') 
  
 <img width="492" alt="Screen Shot 2022-05-18 at 12 50 54" src="https://user-images.githubusercontent.com/62867510/168953524-3ed230ab-3b56-457f-be85-8aef0c783b27.png">
 
