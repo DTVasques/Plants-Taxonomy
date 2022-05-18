@@ -50,6 +50,5 @@ class(world)
   geom_point(data = FILE.csv$var3, aes(x = x, y = y), size = 2, 
              shape = 21, fill = "Orange") +
   coord_sf(xlim = c(125, 160), ylim = c(20, 50), expand = FALSE)
-  
-<img width="793" alt="Screen Shot 2022-05-18 at 12 03 44" src="https://user-images.githubusercontent.com/62867510/168948668-4a840889-5787-4a3a-977f-f6442b2d17b2.png">
+ 
 
