@@ -7,4 +7,5 @@ How to cite:
 Vasques D.T., Plants Taxonomy, GitHub repository, https://github.com/DTVasques/Plants-Taxonomy
 
 Author: Diego Tavares Vasques (Ph.D.)
+
 Email: dtvasques[@]gmail.com
