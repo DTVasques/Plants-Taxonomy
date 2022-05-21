@@ -1,5 +1,7 @@
 # Morphometrics in R
-This scrip brings commands for drawing PCA plots and violin plots in RStudio. You can use these commands when working with descriptive stats for morphometrics.
+You can use these commands when working with descriptive stats for morphometrics.
+
+<img width="317" alt="Screen Shot 2022-05-21 at 17 10 04" src="https://user-images.githubusercontent.com/62867510/169643056-b77495e4-2e05-4d9c-8150-a2e6f286a1c0.png">
 
 # Step 1) Install packages and download libraries
 > install.packages("ggplot2")
@@ -8,24 +10,40 @@ install.packages("tidyverse")
 install.packages("ggpubr")
 
 > library ("ggplot2")
-
 > library ('ggfortify')
-
 > library(tidyverse)
-
-> library (plyr)
-
+> library (dplyr)
 > library(ggpubr)
-
 > theme_set(theme_pubr())
 
-# Count data
+# Counting data per group
 
-FILE.csv %>% count(GROUP, wt = NULL, sort = FALSE, name = NULL)
+Data %>% count("Region", wt = NULL, sort = FALSE, name = NULL)
 
-# Summarize data
+```js
+   Region freq
+1       Asia   18
+2 Neotropics   18
+3    Pacific   18
+```
 
-ddply (FILE.csv, c("GROUP"), summarise, N = variable(VARIABLE), Mean = mean(VARIABLE), SD = sd(VARIABLE), MAX = max(VARIABLE), MIN = min(VARIABLE))
+# Summarizing data
+
+ddply (Data, c("Region"), summarise, Mean = mean(`LL/LW`), SD = sd(`LL/LW`), MAX = max(`LL/LW`), MIN = min(`LL/LW`))
+
+```js
+Region     Mean        SD  MAX MIN
+1       Asia 2.222222 1.5880271  8.0 0.4
+2 Neotropics 2.322222 0.4659659  3.2 1.7
+3    Pacific 5.422222 3.5122568 16.8 1.8
+```
+
+# Draw boxplots
+> ggplot(data = Data, aes(x= Region, y = `LL/LW`)) + geom_boxplot() + 
+  labs(x="Region", y="LL/LW")+ geom_dotplot(binaxis='y', stackdir='center', position=position_dodge(1), dotsize = 0.5)
+  
+<img width="392" alt="Screen Shot 2022-05-21 at 17 25 12" src="https://user-images.githubusercontent.com/62867510/169643079-9163fe17-bbe4-40a0-9f62-42996eeabb06.png">
+
 
 # PCA plot - data selection
 df <- FILE.csv [, 1:10]
@@ -39,10 +57,6 @@ myPr$x
 # Draw scatterplots
 
 > ggplot(FILE.csv, aes(x= VARIABLE1, y= VARIABLE2 , shape=GROUP, color=GROUP)) + geom_point(size=2)
-
-# Draw boxplots
-> ggplot(data = FILE.CSV, aes(x= GROUP, y = VARIABLE)) + geom_boxplot() + 
-  labs(x="Group", y="Variable)")+ geom_dotplot(binaxis='y', stackdir='center', position=position_dodge(1), dotsize = 0.5)
 
 # LDA 
 ## Step1) Preparation
