@@ -53,7 +53,7 @@ Let's compare the variable `LL/LW` between the three explores Regions:
 <img width="392" alt="Screen Shot 2022-05-21 at 17 25 12" src="https://user-images.githubusercontent.com/62867510/169643079-9163fe17-bbe4-40a0-9f62-42996eeabb06.png">
 
 # Drawing Violin plots
-> ggplot (FILE.csv , aes(x=GROUP, y=PL, fill= GROUP)) + geom_violin() + theme (axis.text.x=element_blank())
+> ggplot (Data , aes(x=Region, y=`LL/LW`, fill= Region)) + geom_violin() + theme (axis.text.x=element_blank())
 
 <img width="566" alt="Screen Shot 2022-05-21 at 17 50 43" src="https://user-images.githubusercontent.com/62867510/169643992-e0e30ec1-11cb-4bee-9b80-c7dcc62185eb.png">
 
