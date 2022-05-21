@@ -1,7 +1,12 @@
 # Morphometrics in R
 You can use these commands when working with descriptive stats for morphometrics.
+We will be comparing some mock data generated for individual of the fern species Hymenophyllum polyanthos.
+The plants were measured according to the figure below:
 
 <img width="317" alt="Screen Shot 2022-05-21 at 17 10 04" src="https://user-images.githubusercontent.com/62867510/169643056-b77495e4-2e05-4d9c-8150-a2e6f286a1c0.png">
+
+Data file name: Data
+Variables: Region, 'LL/LW', 'LL/PL', 'LL/ND', 'Pinnula angle', 'LPL/LPW'
 
 # Step 1) Install packages and download libraries
 > install.packages("ggplot2")
@@ -16,7 +21,7 @@ install.packages("ggpubr")
 > library(ggpubr)
 > theme_set(theme_pubr())
 
-# Counting data per group
+## Counting data per group
 
 Data %>% count("Region", wt = NULL, sort = FALSE, name = NULL)
 
@@ -27,7 +32,7 @@ Data %>% count("Region", wt = NULL, sort = FALSE, name = NULL)
 3    Pacific   18
 ```
 
-# Summarizing data
+## Summarizing data
 
 ddply (Data, c("Region"), summarise, Mean = mean(`LL/LW`), SD = sd(`LL/LW`), MAX = max(`LL/LW`), MIN = min(`LL/LW`))
 
@@ -38,25 +43,41 @@ Region     Mean        SD  MAX MIN
 3    Pacific 5.422222 3.5122568 16.8 1.8
 ```
 
-# Draw boxplots
+## Drawing boxplots
+We can compare the variables variance and mean values between regions using the geom_boxplot() argument.
+Let's compare the variable `LL/LW` between the three explores Regions:
+
 > ggplot(data = Data, aes(x= Region, y = `LL/LW`)) + geom_boxplot() + 
   labs(x="Region", y="LL/LW")+ geom_dotplot(binaxis='y', stackdir='center', position=position_dodge(1), dotsize = 0.5)
   
 <img width="392" alt="Screen Shot 2022-05-21 at 17 25 12" src="https://user-images.githubusercontent.com/62867510/169643079-9163fe17-bbe4-40a0-9f62-42996eeabb06.png">
 
+## Draw scatterplots
+Now, let's compare the covariance between variables `LL/LW` and `LL/ND`:
 
-# PCA plot - data selection
-df <- FILE.csv [, 1:10]
-pca_res <- prcomp(df, scale. = TRUE)
+> ggplot(Data, aes(x= `LL/LW`, y= `LL/ND` , shape=Region, color=Region)) + geom_point(size=2)
 
-autoplot(pca_res, data = FILE.csv, colour = 'GROUP', loadings=TRUE, loadings.colour='black', loadings.label=TRUE, loadings.label.size=2, loadings.label.colour='black', frame = FALSE, frame.type = 'norm')
+<img width="390" alt="Screen Shot 2022-05-21 at 17 30 40" src="https://user-images.githubusercontent.com/62867510/169643214-4737aea7-64e4-4248-b265-a8ba1ee0a54f.png">
 
-# PCA summary
-myPr$x
+# Step 2) PCA and LDA plots 
 
-# Draw scatterplots
+We can also compare the covariance of more than two variables by performing a PCA (Principal Component Analysis) or a LDA (Linear Discriminant Analysis).
 
-> ggplot(FILE.csv, aes(x= VARIABLE1, y= VARIABLE2 , shape=GROUP, color=GROUP)) + geom_point(size=2)
+## PCA
+Data selection:
+
+> df <- Data [, 2:5]
+> pca_res <- prcomp(df, scale. = TRUE)
+
+Plotting the PCA:
+> autoplot(pca_res, data = Data, colour = 'Region', loadings=TRUE, loadings.colour='black', loadings.label=FALSE, loadings.label.size=2, loadings.label.colour='black', frame = TRUE, frame.type = 'norm')
+
+<img width="391" alt="Screen Shot 2022-05-21 at 17 36 10" src="https://user-images.githubusercontent.com/62867510/169643447-062cb820-1474-4872-879c-fb0653392ff1.png">
+
+Framing clusters:
+> autoplot(pca_res, data = Data, colour = 'Region', loadings=TRUE, loadings.colour='black', loadings.label=TRUE, loadings.label.size=2, loadings.label.colour='black', frame = TRUE, frame.type = 'norm')
+
+<img width="389" alt="Screen Shot 2022-05-21 at 17 36 27" src="https://user-images.githubusercontent.com/62867510/169643452-37055e01-873d-4fce-a6c9-39c3b86e9b18.png">
 
 # LDA 
 ## Step1) Preparation
