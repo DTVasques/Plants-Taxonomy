@@ -52,7 +52,12 @@ Let's compare the variable `LL/LW` between the three explores Regions:
   
 <img width="392" alt="Screen Shot 2022-05-21 at 17 25 12" src="https://user-images.githubusercontent.com/62867510/169643079-9163fe17-bbe4-40a0-9f62-42996eeabb06.png">
 
-## Draw scatterplots
+# Drawing Violin plots
+> ggplot (FILE.csv , aes(x=GROUP, y=PL, fill= GROUP)) + geom_violin() + theme (axis.text.x=element_blank())
+
+<img width="566" alt="Screen Shot 2022-05-21 at 17 50 43" src="https://user-images.githubusercontent.com/62867510/169643992-e0e30ec1-11cb-4bee-9b80-c7dcc62185eb.png">
+
+## Drawing scatterplots
 Now, let's compare the covariance between variables `LL/LW` and `LL/ND`:
 
 > ggplot(Data, aes(x= `LL/LW`, y= `LL/ND` , shape=Region, color=Region)) + geom_point(size=2)
@@ -79,106 +84,108 @@ Framing clusters:
 
 <img width="389" alt="Screen Shot 2022-05-21 at 17 36 27" src="https://user-images.githubusercontent.com/62867510/169643452-37055e01-873d-4fce-a6c9-39c3b86e9b18.png">
 
-# LDA 
-## Step1) Preparation
+## LDA 
+Preparation
 > library(tidyverse)
-
 > library(caret)
-
 > theme_set(theme_classic())
+> library(MASS)
 
-### Select data
-> data <- FILE.csv[c(1,2,3,4)]
+Select data
+> data <- Data [, 1:5]
 
-> view(data)
-
-### Split the data into training (80%) and test set (20%)
+Split the data into training (80%) and test set (20%)
 > set.seed(123)
 
-> training.samples <- data$GROUP %>%
+> training.samples <- Data$Region %>%
   createDataPartition(p = 0.8, list = FALSE)
   
 > train.data <- data[training.samples, ]
 
 > test.data <- data[-training.samples, ]          
 
-### Estimate preprocessing parameters
+Estimate preprocessing parameters
 > preproc.param <- train.data %>% 
   preProcess(method = c("center", "scale"))
 
-### Transform the data using the estimated parameters
+Transform the data using the estimated parameters
 
 > train.transformed <- preproc.param %>% predict(train.data)
 
 > test.transformed <- preproc.param %>% predict(test.data)
 
-## Step 2) Estimation
-> library(MASS)
+Fit the model
+> model <- lda(Region~., data = train.transformed)
 
-### Fit the model
-> model <- lda(GROUP~., data = train.transformed)
-
-### Make predictions
+Make predictions
 > predictions <- model %>% predict(test.transformed)
 
-### Model accuracy
-> mean(predictions$class==test.transformed$GROUP)
+Model accuracy
+> mean(predictions$class==test.transformed$Region)
 
-## Step 3) Compute LDA
-> model <- lda(GROUP~., data = train.transformed)
+```js
+[1] 0.6666667
+```
+
+Compute LDA
+> model <- lda(Region~., data = train.transformed)
 
 > model
 
-### Plot
+```js
+Call:
+lda(Region ~ ., data = train.transformed)
+
+Prior probabilities of groups:
+      Asia Neotropics    Pacific 
+ 0.3333333  0.3333333  0.3333333 
+
+Group means:
+              `LL/LW`    `LL/PL`    `LL/ND` `Pinnula angle`
+Asia       -0.3788001 -0.4497766 -0.3127133      0.05973894
+Neotropics -0.4021828 -0.1877982 -0.2431799      0.90455455
+Pacific     0.7809829  0.6375748  0.5558932     -0.96429349
+
+Coefficients of linear discriminants:
+                       LD1        LD2
+`LL/LW`         -1.2661863 -0.7343952
+`LL/PL`         -0.1001029 -0.9364680
+`LL/ND`          0.7586180  0.5604085
+`Pinnula angle`  1.3439841 -0.7203769
+
+Proportion of trace:
+  LD1   LD2 
+0.946 0.054 
+```
+
+Plot
 > plot(model)
 
-### make predictions
+<img width="490" alt="Screen Shot 2022-05-21 at 17 48 17" src="https://user-images.githubusercontent.com/62867510/169643818-f1afdf9f-0216-480c-bbc7-d2a29c7f4930.png">
+
+make predictions
 > predictions <- model %>% predict(test.transformed)
 names(predictions)
 
-### Predicted classes
+Predicted classes
 > head(predictions$class, 6)
 
-### Predicted probabilities of class memebership
+Predicted probabilities of class memebership
 > head(predictions$posterior, 6) 
 
-### Linear discriminants
+Linear discriminants
 > head(predictions$x, 3) 
 
-### Plot in ggplot
-> lda.data <- cbind(train.transformed, predict(model)$x)
-ggplot(lda.data, aes(LD1, LD2)) +
-  geom_point(aes(color = GROUP))
-
-# Inferential tests
-
-## Shapiro test of normality
-> shapiro.test(FILE.csv$VARIABLE)
-
-## Difference significance tests
-
-Add the lines below to the ggplot line:
-
-> stat_compare_means(method = "wilcox.test")
-
-> stat_compare_means(method = "t.test")
-
-## ANOVA
-
 ```js
-Assumptions:
-1) Independent observations
-
-2) Normal distribution (Shapiro test -> if p < 0.05 -> not normal)
-> ggdensity (FILE.csv$VARIABLE, main = "TITLE", xlab = "Variable")
-
-> ggqqplot(FILE.csv$VARIABLE)
-
-> shapiro.test(FILE$VARIABLE)
-
-3) Homogeneity of variance
-> bartlett.test(FILE.csv$VARIABLE1 ~ FILE.csv$GROUP, data = df)
+  LD1        LD2
+1 -0.2097511  1.5458457
+2  1.6252681 -0.1183713
+3 -0.5515373  0.1503011
 ```
 
-# Violin plots
-> ggplot (FILE.csv , aes(x=GROUP, y=PL, fill= GROUP)) + geom_violin() + theme (axis.text.x=element_blank())
+Plot in ggplot
+> lda.data <- cbind(train.transformed, predict(model)$x)
+> ggplot(lda.data, aes(LD1, LD2)) +
+  geom_point(aes(color = Region))
+  
+  <img width="566" alt="Screen Shot 2022-05-21 at 17 50 43" src="https://user-images.githubusercontent.com/62867510/169643904-a3fb1f65-014e-4744-a90b-49e216b21399.png">
