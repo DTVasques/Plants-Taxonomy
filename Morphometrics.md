@@ -58,7 +58,7 @@ Let's compare the variable `LL/LW` between the three explores Regions:
 # Drawing Violin plots
 > ggplot (Data , aes(x=Region, y=`LL/LW`, fill= Region)) + geom_violin() + theme (axis.text.x=element_blank())
 
-<img width="566" alt="Screen Shot 2022-05-21 at 17 50 43" src="https://user-images.githubusercontent.com/62867510/169643992-e0e30ec1-11cb-4bee-9b80-c7dcc62185eb.png">
+<img width="564" alt="Screen Shot 2022-05-21 at 17 52 55" src="https://user-images.githubusercontent.com/62867510/169644226-521890fe-1657-4637-b755-a7d14e5ca3d7.png">
 
 ## Drawing scatterplots
 Now, let's compare the covariance between variables `LL/LW` and `LL/ND`:
