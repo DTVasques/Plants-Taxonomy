@@ -6,6 +6,8 @@ The plants were measured according to the figure below:
 <img width="317" alt="Screen Shot 2022-05-21 at 17 10 04" src="https://user-images.githubusercontent.com/62867510/169643056-b77495e4-2e05-4d9c-8150-a2e6f286a1c0.png">
 
 Data file name: Data
+Dta source: [Data.csv](https://github.com/DTVasques/Plants-Taxonomy/files/8747302/Data.csv)
+
 Variables: Region, 'LL/LW', 'LL/PL', 'LL/ND', 'Pinnula angle', 'LPL/LPW'
 
 # Step 1) Install packages and download libraries
