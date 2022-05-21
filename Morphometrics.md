@@ -161,7 +161,7 @@ Proportion of trace:
 Plot
 > plot(model)
 
-<img width="490" alt="Screen Shot 2022-05-21 at 17 48 17" src="https://user-images.githubusercontent.com/62867510/169643818-f1afdf9f-0216-480c-bbc7-d2a29c7f4930.png">
+<img width="564" alt="Screen Shot 2022-05-21 at 17 54 17" src="https://user-images.githubusercontent.com/62867510/169644042-9f2b44d7-cd1f-4bf4-bbe5-39cca86f3f80.png">
 
 make predictions
 > predictions <- model %>% predict(test.transformed)
