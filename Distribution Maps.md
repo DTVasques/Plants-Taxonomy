@@ -98,3 +98,12 @@ Obs3: "limit" argument allows you to select how many datapoints you wish to down
  
 <img width="492" alt="Screen Shot 2022-05-18 at 12 50 54" src="https://user-images.githubusercontent.com/62867510/168953524-3ed230ab-3b56-457f-be85-8aef0c783b27.png">
 
+# Step5) Further edit the plots colors and shapes
+
+>ggplot(data = world) + geom_sf() + geom_point(data = myspecies_coords, aes(x = decimalLongitude, y = decimalLatitude, shape = species, color = species, fill = species), size = 2) + 
+  scale_shape_manual(values=c(4, 21)) +
+  scale_color_manual(values=c('black', 'red')) +
+  scale_fill_manual(values=c('black', 'red')) +
+  coord_sf(xlim = c(125, 150), ylim = c(25, 50)) + ggtitle('Katabami') 
+
+
