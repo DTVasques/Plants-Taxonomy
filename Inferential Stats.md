@@ -2,15 +2,18 @@
 # Inferential tests
 
 ## Shapiro test of normality
-> shapiro.test(FILE.csv$VARIABLE)
+```js
+shapiro.test(FILE.csv$VARIABLE)
+```
 
 ## Difference significance tests
 
 Add the lines below to the ggplot line:
-  
-  > stat_compare_means(method = "wilcox.test")
 
-> stat_compare_means(method = "t.test")
+```js
+stat_compare_means(method = "wilcox.test")
+stat_compare_means(method = "t.test")
+```
 
 ## ANOVA
 
@@ -49,7 +52,7 @@ is.unimodal(VARIABLE)
 #[1] TRUE
 ```
 
-#Assessing Bimodality and Trimodality for the FALSE traits - https://universeofdatascience.com/how-to-determine-if-data-are-unimodal-or-multimodal-in-r/
+# Assessing Bimodality and Trimodality for the FALSE traits - https://universeofdatascience.com/how-to-determine-if-data-are-unimodal-or-multimodal-in-r/
 ```js
 install.packages("LaplacesDemon")
 install.packages("mousetrap")
@@ -67,7 +70,7 @@ is.trimodal(VARIABLE)
 ```
 
 
-#Obtaing modes from multimodal data
+# Obtaing modes from multimodal data
 ```js
 install.packages("LaplacesDemon")
 library(LaplacesDemon)
