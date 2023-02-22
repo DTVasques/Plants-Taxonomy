@@ -12,17 +12,20 @@ Data source: [Data.csv](https://github.com/DTVasques/Plants-Taxonomy/files/87473
 Variables: Region, 'LL/LW', 'LL/PL', 'LL/ND', 'Pinnula angle', 'LPL/LPW'
 
 # Step 1) Install packages and download libraries
-> install.packages("ggplot2")
+```js
+install.packages("ggplot2")
 install.packages("ggfortify")
 install.packages("tidyverse")
 install.packages("ggpubr")
-
-> library ("ggplot2")
-> library ('ggfortify')
-> library(tidyverse)
-> library (dplyr)
-> library(ggpubr)
-> theme_set(theme_pubr())
+```
+```js
+library ("ggplot2")
+library ('ggfortify')
+library(tidyverse)
+library (dplyr)
+library(ggpubr)
+theme_set(theme_pubr())
+```
 
 ## Counting data per group
 
