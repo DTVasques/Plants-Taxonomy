@@ -53,20 +53,26 @@ Region     Mean        SD  MAX MIN
 We can compare the variables variance and mean values between regions using the geom_boxplot() argument.
 Let's compare the variable `LL/LW` between the three explores Regions:
 
-> ggplot(data = Data, aes(x= Region, y = `LL/LW`)) + geom_boxplot() + 
+```js
+ggplot(data = Data, aes(x= Region, y = `LL/LW`)) + geom_boxplot() + 
   labs(x="Region", y="LL/LW")+ geom_dotplot(binaxis='y', stackdir='center', position=position_dodge(1), dotsize = 0.5)
+```
   
 <img width="392" alt="Screen Shot 2022-05-21 at 17 25 12" src="https://user-images.githubusercontent.com/62867510/169643079-9163fe17-bbe4-40a0-9f62-42996eeabb06.png">
 
 # Drawing Violin plots
-> ggplot (Data , aes(x=Region, y=`LL/LW`, fill= Region)) + geom_violin() + theme (axis.text.x=element_blank())
+```js
+ggplot (Data , aes(x=Region, y=`LL/LW`, fill= Region)) + geom_violin() + theme (axis.text.x=element_blank())
+```
 
 <img width="564" alt="Screen Shot 2022-05-21 at 17 52 55" src="https://user-images.githubusercontent.com/62867510/169644226-521890fe-1657-4637-b755-a7d14e5ca3d7.png">
 
 ## Drawing scatterplots
 Now, let's compare the covariance between variables `LL/LW` and `LL/ND`:
 
-> ggplot(Data, aes(x= `LL/LW`, y= `LL/ND` , shape=Region, color=Region)) + geom_point(size=2)
+```js
+ggplot(Data, aes(x= `LL/LW`, y= `LL/ND` , shape=Region, color=Region)) + geom_point(size=2)
+```
 
 <img width="390" alt="Screen Shot 2022-05-21 at 17 30 40" src="https://user-images.githubusercontent.com/62867510/169643214-4737aea7-64e4-4248-b265-a8ba1ee0a54f.png">
 
@@ -77,68 +83,90 @@ We can also compare the covariance of more than two variables by performing a PC
 ## PCA
 Data selection:
 
-> df <- Data [, 2:5]
-> pca_res <- prcomp(df, scale. = TRUE)
+```js
+df <- Data [, 2:5]
+pca_res <- prcomp(df, scale. = TRUE)
+```
 
 Plotting the PCA:
-> autoplot(pca_res, data = Data, colour = 'Region', loadings=TRUE, loadings.colour='black', loadings.label=FALSE, loadings.label.size=2, loadings.label.colour='black', frame = TRUE, frame.type = 'norm')
+```js
+autoplot(pca_res, data = Data, colour = 'Region', loadings=TRUE, loadings.colour='black', loadings.label=FALSE, loadings.label.size=2, loadings.label.colour='black', frame = TRUE, frame.type = 'norm')
+```
 
 <img width="391" alt="Screen Shot 2022-05-21 at 17 36 10" src="https://user-images.githubusercontent.com/62867510/169643447-062cb820-1474-4872-879c-fb0653392ff1.png">
 
 Framing clusters:
-> autoplot(pca_res, data = Data, colour = 'Region', loadings=TRUE, loadings.colour='black', loadings.label=TRUE, loadings.label.size=2, loadings.label.colour='black', frame = TRUE, frame.type = 'norm')
+
+```js
+autoplot(pca_res, data = Data, colour = 'Region', loadings=TRUE, loadings.colour='black', loadings.label=TRUE, loadings.label.size=2, loadings.label.colour='black', frame = TRUE, frame.type = 'norm')
+```
 
 <img width="389" alt="Screen Shot 2022-05-21 at 17 36 27" src="https://user-images.githubusercontent.com/62867510/169643452-37055e01-873d-4fce-a6c9-39c3b86e9b18.png">
 
 ## LDA 
 Preparation
-> library(tidyverse)
-> library(caret)
-> theme_set(theme_classic())
-> library(MASS)
+
+```js
+library(tidyverse)
+library(caret)
+theme_set(theme_classic())
+library(MASS)
+```
 
 Select data
-> data <- Data [, 1:5]
+```js
+data <- Data [, 1:5]
+```
 
 Split the data into training (80%) and test set (20%)
-> set.seed(123)
+```js
+set.seed(123)
 
-> training.samples <- Data$Region %>%
+training.samples <- Data$Region %>%
   createDataPartition(p = 0.8, list = FALSE)
   
-> train.data <- data[training.samples, ]
+train.data <- data[training.samples, ]
 
-> test.data <- data[-training.samples, ]          
+test.data <- data[-training.samples, ]    
+```
 
 Estimate preprocessing parameters
-> preproc.param <- train.data %>% 
+```js
+preproc.param <- train.data %>% 
   preProcess(method = c("center", "scale"))
+```
 
 Transform the data using the estimated parameters
 
-> train.transformed <- preproc.param %>% predict(train.data)
+```js
+train.transformed <- preproc.param %>% predict(train.data)
 
-> test.transformed <- preproc.param %>% predict(test.data)
+test.transformed <- preproc.param %>% predict(test.data)
+```
 
 Fit the model
-> model <- lda(Region~., data = train.transformed)
+```js
+model <- lda(Region~., data = train.transformed)
+```
 
 Make predictions
-> predictions <- model %>% predict(test.transformed)
+```js
+predictions <- model %>% predict(test.transformed)
+```
 
 Model accuracy
-> mean(predictions$class==test.transformed$Region)
 
 ```js
+mean(predictions$class==test.transformed$Region)
 [1] 0.6666667
 ```
 
 Compute LDA
-> model <- lda(Region~., data = train.transformed)
-
-> model
 
 ```js
+model <- lda(Region~., data = train.transformed)
+model
+
 Call:
 lda(Region ~ ., data = train.transformed)
 
@@ -165,24 +193,31 @@ Proportion of trace:
 ```
 
 Plot
-> plot(model)
+```js
+plot(model)
+```
 
 <img width="564" alt="Screen Shot 2022-05-21 at 17 54 17" src="https://user-images.githubusercontent.com/62867510/169644042-9f2b44d7-cd1f-4bf4-bbe5-39cca86f3f80.png">
 
 make predictions
-> predictions <- model %>% predict(test.transformed)
+```js
+predictions <- model %>% predict(test.transformed)
 names(predictions)
+```
 
 Predicted classes
-> head(predictions$class, 6)
+```js
+head(predictions$class, 6)
+```
 
 Predicted probabilities of class memebership
 > head(predictions$posterior, 6) 
 
 Linear discriminants
-> head(predictions$x, 3) 
-
 ```js
+head(predictions$x, 3) 
+
+
   LD1        LD2
 1 -0.2097511  1.5458457
 2  1.6252681 -0.1183713
@@ -190,8 +225,10 @@ Linear discriminants
 ```
 
 Plot in ggplot
-> lda.data <- cbind(train.transformed, predict(model)$x)
-> ggplot(lda.data, aes(LD1, LD2)) +
+```js
+lda.data <- cbind(train.transformed, predict(model)$x)
+ggplot(lda.data, aes(LD1, LD2)) +
   geom_point(aes(color = Region))
+```
   
   <img width="566" alt="Screen Shot 2022-05-21 at 17 50 43" src="https://user-images.githubusercontent.com/62867510/169643904-a3fb1f65-014e-4744-a90b-49e216b21399.png">
