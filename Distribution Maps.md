@@ -123,3 +123,7 @@ ggplot(data = world) + geom_sf() + geom_point(data = myspecies_coords, aes(x = d
 
 <img width="456" alt="Screen Shot 2022-12-07 at 12 06 43" src="https://user-images.githubusercontent.com/62867510/206078430-4cd2c74e-e799-4faf-baef-470ba915b683.png">
 
+
+![image](https://user-images.githubusercontent.com/62867510/231994669-c87dee01-c0ca-45c2-b75d-6902165167d6.png)
+
+
